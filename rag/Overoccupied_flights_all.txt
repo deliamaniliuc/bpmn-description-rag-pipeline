@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.20.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.20.0">
+  <bpmn:process id="Process_CarryOnBaggage" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0oivyiw</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Activity_CheckOccupancy" name="Staff checks flight occupancy">
+      <bpmn:incoming>Flow_0milb39</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_Occupancy" name="Is flight highly occupied?">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_Yes</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0to75ra</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Activity_CheckOccupancy" targetRef="Gateway_Occupancy" />
+    <bpmn:task id="Activity_RemoveItems" name="Remove hazardous items and valuables">
+      <bpmn:incoming>Flow_Yes</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_Yes" name="Yes" sourceRef="Gateway_Occupancy" targetRef="Activity_RemoveItems" />
+    <bpmn:task id="Activity_HandOver" name="Hand bag to gate agent">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Activity_RemoveItems" targetRef="Activity_HandOver" />
+    <bpmn:task id="Activity_LoadBag" name="Bag tagged and loaded to hold">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_1extz1k</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Activity_HandOver" targetRef="Activity_LoadBag" />
+    <bpmn:endEvent id="EndEvent_Board">
+      <bpmn:incoming>Flow_05u8fp6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="Activity_00iev78" name="Passenger arrives at the gate">
+      <bpmn:incoming>Flow_0oivyiw</bpmn:incoming>
+      <bpmn:outgoing>Flow_0milb39</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0oivyiw" sourceRef="StartEvent_1" targetRef="Activity_00iev78" />
+    <bpmn:sequenceFlow id="Flow_0milb39" sourceRef="Activity_00iev78" targetRef="Activity_CheckOccupancy" />
+    <bpmn:task id="Activity_15xx108" name="Passenger boards to the aircraft">
+      <bpmn:incoming>Flow_1extz1k</bpmn:incoming>
+      <bpmn:incoming>Flow_0to75ra</bpmn:incoming>
+      <bpmn:outgoing>Flow_05u8fp6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1extz1k" sourceRef="Activity_LoadBag" targetRef="Activity_15xx108" />
+    <bpmn:sequenceFlow id="Flow_0to75ra" name="No" sourceRef="Gateway_Occupancy" targetRef="Activity_15xx108">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language=""></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_05u8fp6" sourceRef="Activity_15xx108" targetRef="EndEvent_Board" />
+  </bpmn:process>
+ </bpmn:definitions>
+
+Description:
+When the passenger arrives at the boarding gate, the ground staff checks the flight occupancy. If the flight is not highly occupied, the passenger proceeds to board the aircraft with their carry-on baggage. If the flight is highly occupied, there is too much carry-on baggage for the cabin. In this case, the passenger must check in their compliant carry-on bag. First, the passenger removes hazardous items (like power banks and e-cigarettes) and valuables from the bag. Then, the passenger hands the bag to the gate agent. The bag is tagged and loaded into the cargo hold. Finally, the passenger boards the aircraft without the carry-on bag.

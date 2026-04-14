@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.20.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.20.0">
+  <bpmn:process id="Process_DelayedBaggage" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1rr6ead</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Activity_GoToDesk" name="Go to baggage tracing desk">
+      <bpmn:incoming>Flow_07n61fm</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_Report" name="Report delayed baggage">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Activity_GoToDesk" targetRef="Activity_Report" />
+    <bpmn:task id="Activity_GetRef" name="Receive reference number (PIR)">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Activity_Report" targetRef="Activity_GetRef" />
+    <bpmn:task id="Activity_Search" name="Airline searches for baggage">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Activity_GetRef" targetRef="Activity_Search" />
+    <bpmn:task id="Activity_Found" name="Inform passenger bag is found">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Activity_Search" targetRef="Activity_Found" />
+    <bpmn:task id="Activity_Deliver" name="Deliver bag to passenger address">
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_194t1v2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Activity_Found" targetRef="Activity_Deliver" />
+    <bpmn:endEvent id="EndEvent_Received">
+      <bpmn:incoming>Flow_0fyland</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="Activity_1mp3pws" name="Baggage missing">
+      <bpmn:incoming>Flow_1rr6ead</bpmn:incoming>
+      <bpmn:outgoing>Flow_07n61fm</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1rr6ead" sourceRef="StartEvent_1" targetRef="Activity_1mp3pws" />
+    <bpmn:sequenceFlow id="Flow_07n61fm" sourceRef="Activity_1mp3pws" targetRef="Activity_GoToDesk" />
+    <bpmn:task id="Activity_1vh5d7l" name="Baggage received">
+      <bpmn:incoming>Flow_194t1v2</bpmn:incoming>
+      <bpmn:outgoing>Flow_0fyland</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_194t1v2" sourceRef="Activity_Deliver" targetRef="Activity_1vh5d7l" />
+    <bpmn:sequenceFlow id="Flow_0fyland" sourceRef="Activity_1vh5d7l" targetRef="EndEvent_Received" />
+  </bpmn:process>
+ </bpmn:definitions>
+
+Description:
+When the passenger notices their baggage is missing at the arrival belt, they must report it immediately. The passenger goes to the baggage tracing desk in the arrival area. There, the passenger reports the delayed baggage. The staff records the details and provides the passenger with a reference number. Afterward, the airline starts searching for the baggage using the worldwide baggage tracing system. Once the baggage is found, the airline informs the passenger. Finally, the baggage is delivered to the address provided by the passenger.

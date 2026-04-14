@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1d2hcmz" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.20.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.20.0">
+  <bpmn:process id="Process_0gjrx3e" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0i5yquu</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Activity_0f1w87w" name="Passenger enters terminal">
+      <bpmn:incoming>Flow_0i5yquu</bpmn:incoming>
+      <bpmn:outgoing>Flow_082see3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_0h3ea40" name="Passenger goes to the counter">
+      <bpmn:incoming>Flow_082see3</bpmn:incoming>
+      <bpmn:outgoing>Flow_0lc1mgd</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_0x5j19g" name="Passenger has to identify">
+      <bpmn:incoming>Flow_0lc1mgd</bpmn:incoming>
+      <bpmn:outgoing>Flow_0clcoc1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0lc1mgd" sourceRef="Activity_0h3ea40" targetRef="Activity_0x5j19g" />
+    <bpmn:task id="Activity_0y72hjp" name="Passenger chooses seat">
+      <bpmn:incoming>Flow_0clcoc1</bpmn:incoming>
+      <bpmn:outgoing>Flow_0pyxwht</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0clcoc1" sourceRef="Activity_0x5j19g" targetRef="Activity_0y72hjp" />
+    <bpmn:exclusiveGateway id="Gateway_1wdkug8" name="Does the passenger have luggage?">
+      <bpmn:incoming>Flow_0pyxwht</bpmn:incoming>
+      <bpmn:outgoing>Flow_14ineoy</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0wdx26k</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0pyxwht" sourceRef="Activity_0y72hjp" targetRef="Gateway_1wdkug8" />
+    <bpmn:task id="Activity_074g467" name="Take luggage">
+      <bpmn:incoming>Flow_14ineoy</bpmn:incoming>
+      <bpmn:outgoing>Flow_1d6yrlo</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_14ineoy" name="Yes" sourceRef="Gateway_1wdkug8" targetRef="Activity_074g467" />
+    <bpmn:exclusiveGateway id="Gateway_1x3ty6q">
+      <bpmn:incoming>Flow_1d6yrlo</bpmn:incoming>
+      <bpmn:incoming>Flow_0wdx26k</bpmn:incoming>
+      <bpmn:outgoing>Flow_0evw0kn</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1d6yrlo" sourceRef="Activity_074g467" targetRef="Gateway_1x3ty6q" />
+    <bpmn:task id="Activity_09u2bux" name="Passenger gets Boarding Pass">
+      <bpmn:incoming>Flow_0evw0kn</bpmn:incoming>
+      <bpmn:outgoing>Flow_0hjcq9a</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0evw0kn" sourceRef="Gateway_1x3ty6q" targetRef="Activity_09u2bux" />
+    <bpmn:task id="Activity_129gov3" name="Passenger goes to security check">
+      <bpmn:incoming>Flow_0hjcq9a</bpmn:incoming>
+      <bpmn:outgoing>Flow_1lr1uu1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0hjcq9a" sourceRef="Activity_09u2bux" targetRef="Activity_129gov3" />
+    <bpmn:endEvent id="Event_0b8g45e">
+      <bpmn:incoming>Flow_1lr1uu1</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1lr1uu1" sourceRef="Activity_129gov3" targetRef="Event_0b8g45e" />
+    <bpmn:sequenceFlow id="Flow_0wdx26k" name="No" sourceRef="Gateway_1wdkug8" targetRef="Gateway_1x3ty6q" />
+    <bpmn:sequenceFlow id="Flow_082see3" sourceRef="Activity_0f1w87w" targetRef="Activity_0h3ea40" />
+    <bpmn:sequenceFlow id="Flow_0i5yquu" sourceRef="StartEvent_1" targetRef="Activity_0f1w87w" />
+  </bpmn:process>
+ </bpmn:definitions>
+
+Description:
+When the passenger enters the terminal, he/she will go to the counter. The passenger needs to provide an ID for identification. After that the passenger chooses his/her seat. If the passenger has luggage, it will be taken and then the boarding pass will be given to him/her. If the passenger doesn't have luggage, he/she will get the boarding pass directly after choosing the seat. After receiving the Boarding pass the passenger will go to the security check.
